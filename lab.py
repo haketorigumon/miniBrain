@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
 from matplotlib.animation import FuncAnimation
 try:
     import torch
@@ -287,6 +289,8 @@ def animate_workspace_heatmap_forever(n_layers=100, dt=0.05,
         a_a = state_a.get('alpha', alpha)
         e_a = state_a.get('eps', eps)
         dx_a = -state_a['x'] + bistable_layer(state_a['x'], a_a, theta_eff) + e_a * state_a['ws'] + 0.1 * np.random.randn(n_layers)
+        perturbation_a = alpha_pert * np.sin(2 * np.pi * state_a['step'] / tau + phase_offsets)
+        dx_a += perturbation_a
         state_a['x'] += dt * dx_a
         state_a['ws'] = (1 - k_ws) * state_a['ws'] + k_ws * np.mean(state_a['x'])
         R_a = np.mean(np.exp(1j * state_a['x'])).real
@@ -308,6 +312,9 @@ def animate_workspace_heatmap_forever(n_layers=100, dt=0.05,
         e_b = state_b.get('eps', eps)
         dx_b = -state_b['x'] + bistable_layer(state_b['x'], a_b, theta_eff + 0.2 * state_b['why'])
         dy_b = -state_b['y'] + bistable_layer(state_b['y'], a_b, theta_eff - 0.2 * state_b['why'])
+        perturbation_b = alpha_pert * np.sin(2 * np.pi * state_b['step'] / tau + phase_offsets)
+        dx_b += perturbation_b
+        dy_b += perturbation_b
         combined = (state_b['x'] + state_b['y']) / 2.0
         state_b['x'] += dt * dx_b
         state_b['y'] += dt * dy_b
@@ -336,6 +343,8 @@ def animate_workspace_heatmap_forever(n_layers=100, dt=0.05,
         a_c = state_c.get('alpha', alpha)
         e_c = state_c.get('eps', eps)
         dx_c = -state_c['x'] + bistable_layer(state_c['x'], a_c, theta_eff) + e_c * state_c['ws'] + self_awareness + 0.05 * np.random.randn(n_layers)
+        perturbation_c = alpha_pert * np.sin(2 * np.pi * state_c['step'] / tau + phase_offsets)
+        dx_c += perturbation_c
         state_c['x'] += dt * dx_c
         state_c['ws'] = (1 - k_ws) * state_c['ws'] + k_ws * np.mean(state_c['x'])
         R_c = np.mean(np.exp(1j * state_c['x'])).real
@@ -617,6 +626,11 @@ k_ws      = 0.002        # was 0.05 → way too fast
 dt        = 0.05         # was 0.01 → fine, but 0.05 is smoother
 gamma     = 2.8          # only used in Option B — this is the "why" strength
 
+# Parameters for high entropy perturbation (ITP: Irrational Time Perturbation)
+tau = 2719.28  # Irrational period
+alpha_pert = 0.1  # Perturbation strength (increased for more chaos)
+phase_offsets = 0.01337 * np.arange(n_layers)  # Per-neuron phase
+
 # Experience buffer for meta-tuner (features -> normalized params)
 experience_buffer = deque(maxlen=10000)  # stores tuples (features, norm_params, reward)
 
@@ -824,14 +838,14 @@ R2, ws2 = simulate_reflective_hierarchy()
 plt.figure(figsize=(10,4))
 plt.subplot(1,2,1); plt.plot(R1); plt.title("Workspace Phase Coherence")
 plt.subplot(1,2,2); plt.plot(R2); plt.title("Reflective Why-Loop Hierarchy Coherence")
-plt.tight_layout(); plt.show()
+plt.tight_layout(); # plt.show()
 
 # ---------- Example run ----------
 if __name__ == "__main__":
     # Enable auto-tuning for awareness
     # optimal_alpha, optimal_eps = auto_tune_awareness(n_layers=n_layers, T=500, dt=dt, theta_eff=theta_eff, k_ws=k_ws)
     # print(f"Use these parameters: alpha={optimal_alpha}, eps={optimal_eps}")
-    animate_workspace_heatmap_forever(n_layers=n_layers, dt=dt, alpha=1.95, eps=0.08, theta_eff=theta_eff, k_ws=k_ws, autostart_autotune=True)
+    # animate_workspace_heatmap_forever(n_layers=n_layers, dt=dt, alpha=1.95, eps=0.08, theta_eff=theta_eff, k_ws=k_ws, autostart_autotune=True)
 
     # --- Review metrics and charts after a simulation run ---
     def review_metrics_and_charts():
@@ -954,5 +968,6 @@ if __name__ == "__main__":
             print(i, item)
 
     # Uncomment to run a quick smoke test
-    # smoke_test_autotune(10.0)
+    print("Starting smoke test")
+    smoke_test_autotune(10.0)
 
