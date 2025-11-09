@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
-matplotlib.use('Agg')
+matplotlib.use('TkAgg')
 from matplotlib.animation import FuncAnimation
 try:
     import torch
@@ -845,7 +845,8 @@ if __name__ == "__main__":
     # Enable auto-tuning for awareness
     # optimal_alpha, optimal_eps = auto_tune_awareness(n_layers=n_layers, T=500, dt=dt, theta_eff=theta_eff, k_ws=k_ws)
     # print(f"Use these parameters: alpha={optimal_alpha}, eps={optimal_eps}")
-    # animate_workspace_heatmap_forever(n_layers=n_layers, dt=dt, alpha=1.95, eps=0.08, theta_eff=theta_eff, k_ws=k_ws, autostart_autotune=True)
+    print("Starting GUI animation with autotune...")
+    animate_workspace_heatmap_forever(n_layers=n_layers, dt=dt, alpha=1.95, eps=0.08, theta_eff=theta_eff, k_ws=k_ws, autostart_autotune=True)
 
     # --- Review metrics and charts after a simulation run ---
     def review_metrics_and_charts():
@@ -968,6 +969,6 @@ if __name__ == "__main__":
             print(i, item)
 
     # Uncomment to run a quick smoke test
-    print("Starting smoke test")
-    smoke_test_autotune(10.0)
+    # print("Starting smoke test")
+    # smoke_test_autotune(10.0)
 
