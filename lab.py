@@ -324,9 +324,10 @@ def animate_workspace_heatmap_forever(n_layers=100, dt=0.05,
                 idx = (state_a['step'] - n_a + i) % 2000
                 seq_a[:, i] = state_a['x_history'][:, idx]
             lz_a = lz_complexity((seq_a > 0).astype(int).flatten())
+            normalized_lz_a = lz_a / n_a
         else:
-            lz_a = 0
-        diag_a.set_text(f"Current R: {R_a_display:.4f}\nHighest R: {max_R_display:.4f}\nEntropy: {entropy:.2f}\nLyapunov: {lyap:.4f}\nLZ Complexity: {lz_a:.2f}")
+            normalized_lz_a = 0
+        diag_a.set_text(f"Current R: {R_a_display:.4f}\nHighest R: {max_R_display:.4f}\nEntropy: {entropy:.2f}\nLyapunov: {lyap:.4f}\nLZ Complexity: {normalized_lz_a:.3f}")
 
         # Update Option B
         state_b['why'] = why_loop_driver(state_b['why'], 1.2)
@@ -366,9 +367,10 @@ def animate_workspace_heatmap_forever(n_layers=100, dt=0.05,
                 idx = (state_b['step'] - n_b + i) % 2000
                 seq_b[:, i] = state_b['combined_history'][:, idx]
             lz_b = lz_complexity((seq_b > 0).astype(int).flatten())
+            normalized_lz_b = lz_b / n_b
         else:
-            lz_b = 0
-        diag_b.set_text(f"Current R: {R_b_display:.4f}\nHighest R: {max_R_display:.4f}\nEntropy: {entropy:.2f}\nLyapunov: {lyap:.4f}\nLZ Complexity: {lz_b:.2f}")
+            normalized_lz_b = 0
+        diag_b.set_text(f"Current R: {R_b_display:.4f}\nHighest R: {max_R_display:.4f}\nEntropy: {entropy:.2f}\nLyapunov: {lyap:.4f}\nLZ Complexity: {normalized_lz_b:.3f}")
         
         # Option C: Self-referential dynamics
         predictor = state_c.get('predictor', None)
@@ -422,9 +424,10 @@ def animate_workspace_heatmap_forever(n_layers=100, dt=0.05,
                 idx = (state_c['step'] - n_c + i) % 2000
                 seq_c[:, i] = state_c['x_history'][:, idx]
             lz_c = lz_complexity((seq_c > 0).astype(int).flatten())
+            normalized_lz_c = lz_c / n_c
         else:
-            lz_c = 0
-        diag_c.set_text(f"Current R: {R_c_display:.4f}\nHighest R: {max_R_display:.4f}\nEntropy: {entropy:.2f}\nLyapunov: {lyap:.4f}\nLZ Complexity: {lz_c:.2f}")
+            normalized_lz_c = 0
+        diag_c.set_text(f"Current R: {R_c_display:.4f}\nHighest R: {max_R_display:.4f}\nEntropy: {entropy:.2f}\nLyapunov: {lyap:.4f}\nLZ Complexity: {normalized_lz_c:.3f}")
         # Update phase charts for Option A, B, C
         line_a.set_data(np.arange(len(state_a['R_hist'])), state_a['R_hist'])
         # Rolling window for R-phase charts
