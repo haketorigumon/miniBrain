@@ -65,6 +65,18 @@ python3 -c "import matplotlib; matplotlib.use('Agg'); import lab; lab.smoke_test
 ```
 - Runs autotune for 2 seconds, prints buffer size and samples.
 
+### Self-Referential Utilities (models/self.py)
+Run standalone self-referential simulations and visualizations:
+```bash
+# Compare different levels of self-reference (static plots)
+python3 -c "from models.self import compare_self_reference_levels; compare_self_reference_levels()"
+
+# Real-time self-referential animation
+python3 -c "from models.self import animate_self_reference_realtime; animate_self_reference_realtime()"
+```
+- `compare_self_reference_levels()`: Generates comparison plots for basic, self-referential, and hierarchical models.
+- `animate_self_reference_realtime()`: Interactive animation of self-referential dynamics with controls.
+
 ### Custom Runs
 - Modify `n_layers`, `dt`, `rolling_window` in `lab.py`.
 - For longer runs, adjust `ROLLOUT_STEPS` and reward weights.
