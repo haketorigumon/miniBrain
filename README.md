@@ -1,5 +1,5 @@
 # miniBrain
-I  did this on an hp noteboowk laptop with a quadcore and 6 gigs of ram which is well over 10 years old.  
+I  did this on an hp noteboowk laptop with a quadcore and 6 gigs of ram which is well over 10 years old. Certainly could use an upgrade. 
 
 A minimal simulation laboratory for exploring bistable workspace dynamics, self-referential models, and autotuning in neural-like systems.
 
