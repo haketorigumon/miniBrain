@@ -313,6 +313,7 @@ def animate_workspace_heatmap_forever(n_layers=100, dt=0.05,
         state_a['max_R'] = max(state_a['max_R'], R_a)
         # Diagnostics for Option A
         entropy = shannon_entropy(np.array(state_a['R_hist']))
+        normalized_entropy = entropy / np.log(50) if entropy > 0 else 0.0
         lyap = lyapunov_proxy(np.array(state_a['R_hist']))
         R_a_display = R_a if np.isfinite(R_a) else 0.0
         max_R_display = state_a['max_R'] if np.isfinite(state_a['max_R']) else 0.0
@@ -327,7 +328,7 @@ def animate_workspace_heatmap_forever(n_layers=100, dt=0.05,
             normalized_lz_a = lz_a / n_a
         else:
             normalized_lz_a = 0
-        diag_a.set_text(f"Current R: {R_a_display:.4f}\nHighest R: {max_R_display:.4f}\nEntropy: {entropy:.2f}\nLyapunov: {lyap:.4f}\nLZ Complexity: {normalized_lz_a:.3f}")
+        diag_a.set_text(f"Current R: {R_a_display:.4f}\nHighest R: {max_R_display:.4f}\nEntropy: {normalized_entropy:.3f}\nLyapunov: {lyap:.4f}\nLZ Complexity: {normalized_lz_a:.3f}")
 
         # Update Option B
         state_b['why'] = why_loop_driver(state_b['why'], 1.2)
