@@ -107,7 +107,7 @@ miniBrain/
 
 ## License
 
-MIT License. See LICENSE file for details.
+Refer to license.md for use cases.
 
 ## References
 
