@@ -357,6 +357,7 @@ def animate_workspace_heatmap_forever(n_layers=100, dt=0.05,
         state_b['max_R'] = max(state_b['max_R'], R_b)
         # Diagnostics for Option B
         entropy = shannon_entropy(np.array(state_b['R_hist']))
+        normalized_entropy = entropy / np.log(50) if entropy > 0 else 0.0
         lyap = lyapunov_proxy(np.array(state_b['R_hist']))
         R_b_display = R_b if np.isfinite(R_b) else 0.0
         max_R_display = state_b['max_R'] if np.isfinite(state_b['max_R']) else 0.0
@@ -371,7 +372,7 @@ def animate_workspace_heatmap_forever(n_layers=100, dt=0.05,
             normalized_lz_b = lz_b / n_b
         else:
             normalized_lz_b = 0
-        diag_b.set_text(f"Current R: {R_b_display:.4f}\nHighest R: {max_R_display:.4f}\nEntropy: {entropy:.2f}\nLyapunov: {lyap:.4f}\nLZ Complexity: {normalized_lz_b:.3f}")
+        diag_b.set_text(f"Current R: {R_b_display:.4f}\nHighest R: {max_R_display:.4f}\nEntropy: {normalized_entropy:.3f}\nLyapunov: {lyap:.4f}\nLZ Complexity: {normalized_lz_b:.3f}")
         
         # Option C: Self-referential dynamics
         predictor = state_c.get('predictor', None)
@@ -414,6 +415,7 @@ def animate_workspace_heatmap_forever(n_layers=100, dt=0.05,
         state_c['self_error_hist'].append(self_error)
         # diagnostics for C
         entropy = shannon_entropy(np.array(state_c['R_hist']))
+        normalized_entropy = entropy / np.log(50) if entropy > 0 else 0.0
         lyap = lyapunov_proxy(np.array(state_c['R_hist']))
         R_c_display = R_c if np.isfinite(R_c) else 0.0
         max_R_display = state_c['max_R'] if np.isfinite(state_c['max_R']) else 0.0
@@ -428,7 +430,7 @@ def animate_workspace_heatmap_forever(n_layers=100, dt=0.05,
             normalized_lz_c = lz_c / n_c
         else:
             normalized_lz_c = 0
-        diag_c.set_text(f"Current R: {R_c_display:.4f}\nHighest R: {max_R_display:.4f}\nEntropy: {entropy:.2f}\nLyapunov: {lyap:.4f}\nLZ Complexity: {normalized_lz_c:.3f}")
+        diag_c.set_text(f"Current R: {R_c_display:.4f}\nHighest R: {max_R_display:.4f}\nEntropy: {normalized_entropy:.3f}\nLyapunov: {lyap:.4f}\nLZ Complexity: {normalized_lz_c:.3f}")
         # Update phase charts for Option A, B, C
         line_a.set_data(np.arange(len(state_a['R_hist'])), state_a['R_hist'])
         # Rolling window for R-phase charts
